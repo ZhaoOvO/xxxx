@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(jllama CXX)
+project(jllama C CXX)
 
 include(FetchContent)
 
