@@ -144,15 +144,15 @@ JNIEnv *get_jni_env()
  */
 void log_callback_trampoline(ggml_log_level level, const char *text, void *user_data)
 {
-    if (log_callback != nullptr)
+    if (o_log_callback != nullptr)
     {
-        log_callback(level, text, user_data);
+        o_log_callback(level, text, user_data);
     }
 }
 } // namespace
 
 bool log_json;
-std::function<void(ggml_log_level, const char *, void *)> log_callback;
+std::function<void(ggml_log_level, const char *, void *)> o_log_callback;
 
 /**
  * The VM calls JNI_OnLoad when the native library is loaded (for example, through `System.loadLibrary`).
@@ -668,13 +668,13 @@ JNIEXPORT void JNICALL Java_cn_hthcorp_llama_LlamaModel_setLogger(JNIEnv *env, j
 
     if (jcallback == nullptr)
     {
-        log_callback = nullptr;
+        o_log_callback = nullptr;
         llama_log_set(nullptr, nullptr);
     }
     else
     {
         o_log_callback = env->NewGlobalRef(jcallback);
-        log_callback = [](enum ggml_log_level level, const char *text, void *user_data) {
+        o_log_callback = [](enum ggml_log_level level, const char *text, void *user_data) {
             JNIEnv *env = get_jni_env();
             jstring message = env->NewStringUTF(text);
             jobject log_level = log_level_to_jobject(level);
