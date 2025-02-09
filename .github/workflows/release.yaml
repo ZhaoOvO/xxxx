@@ -26,7 +26,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: linux-libraries-cuda
-          path: ${{ github.workspace }}/src/main/resources_linux_cuda/de/kherud/llama/
+          path: ${{ github.workspace }}/src/main/resources_linux_cuda/cn/hthcorp/llama/
 
   build-linux-docker:
     name: Build ${{ matrix.target.os }}-${{ matrix.target.arch }}
@@ -60,7 +60,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target.os }}-${{ matrix.target.arch }}-libraries
-          path: ${{ github.workspace }}/src/main/resources/de/kherud/llama/
+          path: ${{ github.workspace }}/src/main/resources/cn/hthcorp/llama/
 
 
   build-macos-native:
@@ -89,7 +89,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target.runner }}-libraries
-          path: ${{ github.workspace }}/src/main/resources/de/kherud/llama/
+          path: ${{ github.workspace }}/src/main/resources/cn/hthcorp/llama/
 
 
   build-win-native:
@@ -129,7 +129,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target.os }}-${{ matrix.target.arch }}-libraries
-          path: ${{ github.workspace }}/src/main/resources/de/kherud/llama/
+          path: ${{ github.workspace }}/src/main/resources/cn/hthcorp/llama/
 
 
   test-linux:
@@ -141,7 +141,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: Linux-x86_64-libraries
-          path: ${{ github.workspace }}/src/main/resources/de/kherud/llama/
+          path: ${{ github.workspace }}/src/main/resources/cn/hthcorp/llama/
       - name: Download model
         run: curl -L ${MODEL_URL} --create-dirs -o models/${MODEL_NAME}
       - uses: actions/setup-java@v4
@@ -160,7 +160,7 @@ jobs:
 #      - uses: actions/download-artifact@v4
 #        with:
 #          name: macos14-libraries
-#          path: ${{ github.workspace }}/src/main/resources/de/kherud/llama/
+#          path: ${{ github.workspace }}/src/main/resources/cn/hthcorp/llama/
 #      - name: Download model
 #        run: curl -L ${MODEL_URL} --create-dirs -o models/${MODEL_NAME}
 #      - uses: actions/setup-java@v4
@@ -180,7 +180,7 @@ jobs:
 #      - uses: actions/download-artifact@v4
 #        with:
 #          name: Windows-x86_64-libraries
-#          path: ${{ github.workspace }}/src/main/resources/de/kherud/llama/
+#          path: ${{ github.workspace }}/src/main/resources/cn/hthcorp/llama/
 #      - name: Download model
 #        run: curl -L $env:MODEL_URL --create-dirs -o models/$env:MODEL_NAME
 #      - uses: actions/setup-java@v4
@@ -201,11 +201,11 @@ jobs:
         with:
           pattern: "*-libraries"
           merge-multiple: true
-          path: ${{ github.workspace }}/src/main/resources/de/kherud/llama/
+          path: ${{ github.workspace }}/src/main/resources/cn/hthcorp/llama/
       - uses: actions/download-artifact@v4
         with:
           name: linux-libraries-cuda
-          path: ${{ github.workspace }}/src/main/resources_linux_cuda/de/kherud/llama/
+          path: ${{ github.workspace }}/src/main/resources_linux_cuda/cn/hthcorp/llama/
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v3
         with:
