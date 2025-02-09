@@ -20,7 +20,7 @@ FetchContent_MakeAvailable(json)
 
 #################### llama.cpp ####################
 
-# set(LLAMA_BUILD_COMMON ON)
+set(LLAMA_BUILD_COMMON ON)
 FetchContent_Declare(
 	llama.cpp
 	GIT_REPOSITORY https://github.com/ggerganov/llama.cpp.git
@@ -34,7 +34,7 @@ FetchContent_MakeAvailable(llama.cpp)
 if(NOT DEFINED OS_NAME)
     find_package(Java REQUIRED)
     find_program(JAVA_EXECUTABLE NAMES java)
-	execute_process(
+    execute_process(
       COMMAND ${JAVA_EXECUTABLE} -cp ${CMAKE_SOURCE_DIR}/target/classes cn.hthcorp.llama.OSInfo --os
       OUTPUT_VARIABLE OS_NAME
       OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -96,7 +96,7 @@ add_library(jllama SHARED src/main/cpp/jllama.cpp src/main/cpp/server.hpp src/ma
 set_target_properties(jllama PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(jllama PRIVATE src/main/cpp ${JNI_INCLUDE_DIRS})
 target_link_libraries(jllama PRIVATE common llama nlohmann_json)
-target_compile_features(jllama PRIVATE cxx_std_11)
+target_compile_features(jllama PRIVATE cxx_std_17)
 
 target_compile_definitions(jllama PRIVATE
     SERVER_VERBOSE=$<BOOL:${LLAMA_VERBOSE}>
