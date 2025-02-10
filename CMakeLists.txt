@@ -59,6 +59,12 @@ if(NOT OS_ARCH)
     message(FATAL_ERROR "Could not determine CPU architecture")
 endif()
 
+set(CLANG_OS ARM ARM64)
+
+if(OS_ARCH IN_LIST CLANG_OS)
+    set(CMAKE_C_COMPILER clang)
+endif()
+
 if(GGML_CUDA)
     set(JLLAMA_DIR ${CMAKE_SOURCE_DIR}/src/main/resources_linux_cuda/cn/hthcorp/llama/${OS_NAME}/${OS_ARCH})
     message(STATUS "GPU (CUDA Linux) build - Installing files to ${JLLAMA_DIR}")
