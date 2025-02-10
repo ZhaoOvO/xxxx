@@ -4,13 +4,13 @@ project(jllama CXX)
 
 include(FetchContent)
 
+set(LLAMA_BUILD_COMMON ON)
 set(BUILD_SHARED_LIBS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 option(LLAMA_VERBOSE	"llama: verbose output"		OFF)
 
 #################### json ####################
-
 FetchContent_Declare(
 	json
 	GIT_REPOSITORY https://github.com/nlohmann/json
@@ -19,8 +19,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(json)
 
 #################### llama.cpp ####################
-
-set(LLAMA_BUILD_COMMON ON)
 FetchContent_Declare(
 	llama.cpp
 	GIT_REPOSITORY https://github.com/ggerganov/llama.cpp.git
@@ -30,7 +28,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(llama.cpp)
 
 #################### jllama ####################
-
 # find which OS we build for if not set (make sure to run mvn compile first)
 if(NOT DEFINED OS_NAME)
     find_package(Java REQUIRED)
