@@ -5,7 +5,6 @@ project(jllama CXX)
 include(FetchContent)
 
 set(BUILD_SHARED_LIBS ON)
-set(GGML_BACKEND_DL ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 option(LLAMA_VERBOSE	"llama: verbose output"		OFF)
