@@ -101,7 +101,7 @@ add_library(jllama SHARED src/main/cpp/jllama.cpp src/main/cpp/server.hpp src/ma
 
 set_target_properties(jllama PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(jllama PRIVATE src/main/cpp ${JNI_INCLUDE_DIRS})
-target_link_libraries(jllama PRIVATE common llama nlohmann_json)
+target_link_libraries(jllama PRIVATE common llama nlohmann_json arg log base64 sampling speculative json-schema-to-grammar)
 target_compile_features(jllama PRIVATE cxx_std_17)
 
 target_compile_definitions(jllama PRIVATE
