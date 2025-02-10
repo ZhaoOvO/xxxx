@@ -5,7 +5,6 @@ project(jllama CXX)
 include(FetchContent)
 
 set(LLAMA_BUILD_COMMON ON)
-set(GGML_LLAMAFILE ON)
 set(BUILD_SHARED_LIBS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
