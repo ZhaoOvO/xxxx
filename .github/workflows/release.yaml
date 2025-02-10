@@ -1,4 +1,4 @@
-name: Release to Maven Central
+name: Package jar file
 on:
   workflow_dispatch:
     inputs:
