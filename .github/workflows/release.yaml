@@ -206,3 +206,8 @@ jobs:
         with:
           name: linux-libraries-cuda
           path: ${{ github.workspace }}/src/main/resources_linux_cuda/cn/hthcorp/llama/
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: jllama.jar
+          path: ${{ github.workspace }}/src/main/resources/cn/hthcorp/llama/
