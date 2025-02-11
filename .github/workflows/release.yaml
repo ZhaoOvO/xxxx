@@ -193,7 +193,8 @@ jobs:
 
   publish:
     if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.build_only == 'no' }}
-    needs: [ test-linux,build-macos-native,build-win-native,build-linux-cuda ]
+    # needs: [ test-linux,build-macos-native,build-win-native,build-linux-cuda ]
+    needs: [ test-linux,build-macos-native,build-win-native ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
