@@ -34,6 +34,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(llama.cpp)
 
+add_subdirectory(llama.cpp)
+
 #################### jllama ####################
 # find which OS we build for if not set (make sure to run mvn compile first)
 if(NOT DEFINED OS_NAME)
