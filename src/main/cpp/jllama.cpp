@@ -404,6 +404,8 @@ JNIEXPORT void JNICALL Java_cn_hthcorp_llama_LlamaModel_loadModel(JNIEnv *env, j
     {
         return;
     }
+    
+     SRV_INF("loading model '%s'\n", params.model.c_str());
 
     common_init();
 
@@ -445,7 +447,7 @@ JNIEXPORT void JNICALL Java_cn_hthcorp_llama_LlamaModel_loadModel(JNIEnv *env, j
     // if a custom chat template is not supplied, we will use the one that comes with the model (if any)
     if (params.chat_template.empty())
     {
-        if (!ctx_server->validate_builtin_chat_template())
+        if (!ctx_server->validate_builtin_chat_template(params.use_jinja))
         {
             LOG_WRN("%s: The chat template that comes with this model is not yet supported, falling back to chatml. "
                     "This may cause the model to output suboptimal responses\n",
@@ -457,7 +459,7 @@ JNIEXPORT void JNICALL Java_cn_hthcorp_llama_LlamaModel_loadModel(JNIEnv *env, j
     // print sample chat example to make it clear which template is used
     LOG_INF("%s: chat template, chat_template: %s, example_format: '%s'\n", __func__,
             params.chat_template.empty() ? "(built-in)" : params.chat_template.c_str(),
-            common_chat_format_example(ctx_server->model, params.chat_template).c_str());
+            common_chat_format_example(*ctx_server->chat_templates.template_default, ctx_server->params_base.use_jinja) .c_str());
 
     ctx_server->queue_tasks.on_new_task(
         std::bind(&server_context::process_single_task, ctx_server, std::placeholders::_1));
@@ -501,8 +503,10 @@ JNIEXPORT jint JNICALL Java_cn_hthcorp_llama_LlamaModel_requestCompletion(JNIEnv
 
     try
     {
-        std::vector<llama_tokens> tokenized_prompts =
-            tokenize_input_prompts(ctx_server->vocab, data.at("prompt"), true, true);
+		const auto & prompt = data.at("prompt");
+		
+        std::vector<llama_tokens> tokenized_prompts = tokenize_input_prompts(ctx_server->vocab, prompt, true, true);
+        
         tasks.reserve(tokenized_prompts.size());
         for (size_t i = 0; i < tokenized_prompts.size(); i++)
         {
@@ -585,6 +589,8 @@ JNIEXPORT jobject JNICALL Java_cn_hthcorp_llama_LlamaModel_receiveCompletion(JNI
         }
     }
 
+    ctx_server->queue_results.remove_waiting_task_id(id_task);
+
     jbyteArray jbytes = parse_jbytes(env, response);
     return env->NewObject(c_output, cc_output, jbytes, o_probabilities, result->is_stop());
 }
@@ -600,8 +606,12 @@ JNIEXPORT jfloatArray JNICALL Java_cn_hthcorp_llama_LlamaModel_embed(JNIEnv *env
                       "model was not loaded with embedding support (see ModelParameters#setEmbedding(boolean))");
         return nullptr;
     }
+    
+
 
     const std::string prompt = parse_jstring(env, jprompt);
+    
+    SRV_INF("Calling embedding '%s'\n", prompt.c_str());
 
     const auto tokens = tokenize_mixed(ctx_server->vocab, prompt, true, true);
     std::vector<server_task> tasks;
@@ -627,7 +637,9 @@ JNIEXPORT jfloatArray JNICALL Java_cn_hthcorp_llama_LlamaModel_embed(JNIEnv *env
     json error = nullptr;
 
     server_task_result_ptr result = ctx_server->queue_results.recv(id_task);
+    ctx_server->queue_results.remove_waiting_task_id(id_task);
 
+	json response_str = result->to_json();
     if (result->is_error())
     {
         std::string response = result->to_json()["message"].get<std::string>();
@@ -638,19 +650,38 @@ JNIEXPORT jfloatArray JNICALL Java_cn_hthcorp_llama_LlamaModel_embed(JNIEnv *env
 
     const auto out_res = result->to_json();
 
-    std::vector<float> embedding = out_res["embedding"].get<std::vector<float>>();
-    jsize embedding_size = embedding.size(); // NOLINT(*-narrowing-conversions)
+	// Extract "embedding" as a vector of vectors (2D array)
+	std::vector<std::vector<float>> embedding = out_res["embedding"].get<std::vector<std::vector<float>>>();
 
-    jfloatArray j_embedding = env->NewFloatArray(embedding_size);
-    if (j_embedding == nullptr)
-    {
-        env->ThrowNew(c_error_oom, "could not allocate embedding");
-        return nullptr;
-    }
+	// Get total number of rows in the embedding
+	jsize embedding_rows = embedding.size();
 
-    env->SetFloatArrayRegion(j_embedding, 0, embedding_size, reinterpret_cast<const jfloat *>(embedding.data()));
+	// Get total number of columns in the first row (assuming all rows are of equal length)
+	jsize embedding_cols = embedding_rows > 0 ? embedding[0].size() : 0;
 
-    return j_embedding;
+	SRV_INF("Embedding has %d rows and %d columns\n", embedding_rows, embedding_cols);
+
+    // Ensure embedding is not empty
+	if (embedding.empty() || embedding[0].empty()) {
+    	env->ThrowNew(c_error_oom, "embedding array is empty");
+    	return nullptr;
+	}
+
+	// Extract only the first row
+	const std::vector<float>& first_row = embedding[0];  // Reference to avoid copying
+
+	
+	// Create a new float array in JNI
+	jfloatArray j_embedding = env->NewFloatArray(embedding_cols);
+	if (j_embedding == nullptr) {
+    	env->ThrowNew(c_error_oom, "could not allocate embedding");
+    	return nullptr;
+	}
+
+	// Copy the first row into the JNI float array
+	env->SetFloatArrayRegion(j_embedding, 0, embedding_cols, reinterpret_cast<const jfloat *>(first_row.data()));
+
+	return j_embedding;
 }
 
 JNIEXPORT jintArray JNICALL Java_cn_hthcorp_llama_LlamaModel_encode(JNIEnv *env, jobject obj, jstring jprompt)
