@@ -3,16 +3,10 @@ cmake_minimum_required(VERSION 3.15)
 project(jllama C CXX)
 
 include(FetchContent)
-include(CheckIncludeFileCXX)
 
 set(BUILD_SHARED_LIBS ON)
+set(LLAMA_BUILD_COMMON ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(LLAMA_BUILD_COMMON)
-
-set(CMAKE_SKIP_BUILD_RPATH FALSE)
-set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-set(CMAKE_SKIP_RPATH FALSE)
 
 option(LLAMA_VERBOSE	"llama: verbose output"		OFF)
 
