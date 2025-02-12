@@ -5,8 +5,6 @@ project(jllama C CXX)
 include(FetchContent)
 
 set(BUILD_SHARED_LIBS ON)
-set(LLAMA_BUILD_COMMON ON)
-#set(LLAMA_STATIC OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 option(LLAMA_VERBOSE	"llama: verbose output"		OFF)
@@ -22,12 +20,10 @@ FetchContent_MakeAvailable(json)
 
 #################### llama.cpp ####################
 
+set(LLAMA_BUILD_COMMON ON)
 FetchContent_Declare(
 	llama.cpp
 	GIT_REPOSITORY https://github.com/ggerganov/llama.cpp.git
-#	GIT_TAG        b4513
-#	GIT_TAG        b4514
-# 	GIT_TAG        b4523
  	GIT_TAG        b4689
 )
 FetchContent_MakeAvailable(llama.cpp)
@@ -62,9 +58,9 @@ if(NOT OS_ARCH)
     message(FATAL_ERROR "Could not determine CPU architecture")
 endif()
 
-set(CLANG_OS ARM ARM64)
+set(CLANG_OS "ARM" "ARM64")
 if(OS_ARCH IN_LIST CLANG_OS)
-    set(CMAKE_C_COMPILER Clang)
+    set(CMAKE_C_COMPILER "Clang")
 endif()
 
 if(GGML_CUDA)
