@@ -32,7 +32,8 @@ FetchContent_Declare(
 	GIT_REPOSITORY https://github.com/ggerganov/llama.cpp.git
 #	GIT_TAG        b4513
 #	GIT_TAG        b4514
- 	GIT_TAG        b4523
+# 	GIT_TAG        b4523
+# 	GIT_TAG        b4689
 )
 FetchContent_MakeAvailable(llama.cpp)
 
