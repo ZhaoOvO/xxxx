@@ -66,7 +66,9 @@ public class LlamaModel implements AutoCloseable {
 	public LlamaIterable generate(InferenceParameters parameters) {
 		return () -> new LlamaIterator(this, parameters);
 	}
-
+	
+	
+    
 	/**
 	 * Get the embedding of a string. Note, that the prompt isn't preprocessed in any way, nothing like
 	 * "User: ", "###Instruction", etc. is added.
@@ -75,7 +77,8 @@ public class LlamaModel implements AutoCloseable {
 	 * @return an embedding float array
 	 * @throws IllegalStateException if embedding mode was not activated (see {@link ModelParameters#enableEmbedding()})
 	 */
-	public native float[] embed(String prompt);
+	public  native float[] embed(String prompt);
+		
 
 	/**
 	 * Tokenize a prompt given the native tokenizer
