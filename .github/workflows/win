@@ -1,0 +1,25 @@
+name: Package libs file
+on: [ "pull_request", "workflow_dispatch" ]
+jobs:
+  build-win-native:
+    name: Build ${{ matrix.target.os }}-${{ matrix.target.arch }}
+    runs-on: windows-2025
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - {
+            os: Windows,
+            arch: x86_64,
+            cmake: '-G "Visual Studio 17 2022" -A "x64"'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build libraries
+        shell: cmd
+        run: |
+          .github\build.bat ${{ matrix.target.cmake }} -DOS_NAME=${{ matrix.target.os }} -DOS_ARCH=${{ matrix.target.arch }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target.os }}-${{ matrix.target.arch }}-libraries
+          path: ${{ github.workspace }}/src/main/resources/cn/hthcorp/llama/
