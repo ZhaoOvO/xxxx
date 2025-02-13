@@ -1,4 +1,4 @@
-name: Package libs file
+name: Package win64 libs file
 on: [ "pull_request", "workflow_dispatch" ]
 jobs:
   build-win-native:
@@ -8,9 +8,11 @@ jobs:
       fail-fast: false
       matrix:
         target:
-            os: Windows,
-            arch: x86_64,
-            cmake: '-G "Visual Studio 17 2022" -A "x64"'
+          - {
+              os: Windows,
+              arch: x86_64,
+              cmake: '-G "Visual Studio 17 2022" -A "x64"'
+            }
     steps:
       - uses: actions/checkout@v4
       - name: Build libraries
