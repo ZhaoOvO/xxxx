@@ -1,4 +1,4 @@
-name: Package jar file
+name: Package libs file
 on: [ "pull_request", "workflow_dispatch" ]
 env:
   MODEL_URL: "https://huggingface.co/TheBloke/CodeLlama-7B-GGUF/resolve/main/codellama-7b.Q2_K.gguf"
