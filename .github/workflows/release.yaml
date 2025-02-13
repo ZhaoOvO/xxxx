@@ -201,5 +201,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: jllama-libs.zip
+          name: jllama-libs
           path: ${{ github.workspace }}/src/main/resources/cn/hthcorp/llama/
