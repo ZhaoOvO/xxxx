@@ -1,4 +1,7 @@
 name: Package jar file
+on:
+  release:
+    types: [ created ]
 env:
   MODEL_URL: "https://huggingface.co/TheBloke/CodeLlama-7B-GGUF/resolve/main/codellama-7b.Q2_K.gguf"
   MODEL_NAME: "codellama-7b.Q2_K.gguf"
@@ -184,7 +187,7 @@ jobs:
 
   package-libs:
     # needs: [ test-linux,build-macos-native,build-win-native,build-linux-cuda ]
-    needs: [ build-macos-native,build-win-native,build-linux-cuda ]
+    needs: [ build-linux-docker,build-macos-native,build-win-native,build-linux-cuda ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
