@@ -3382,7 +3382,7 @@ static void common_params_handle_model_default(
     }
 }
 
-// parse the given jparams (see de.kherud.llama.args.ModelParameters#toString()) from JSON to the required C++ struct.
+// parse the given jparams (see cn.hthcorp.llama.args.ModelParameters#toString()) from JSON to the required C++ struct.
 static void server_params_parse(json jparams, common_params &params)
 {
     common_params default_params;
