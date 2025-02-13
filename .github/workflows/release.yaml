@@ -1,7 +1,5 @@
 name: Package jar file
-on:
-  release:
-    types: [ created ]
+on: [ "pull_request", "workflow_dispatch" ]
 env:
   MODEL_URL: "https://huggingface.co/TheBloke/CodeLlama-7B-GGUF/resolve/main/codellama-7b.Q2_K.gguf"
   MODEL_NAME: "codellama-7b.Q2_K.gguf"
