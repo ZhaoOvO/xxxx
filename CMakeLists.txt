@@ -100,7 +100,7 @@ add_library(jllama SHARED src/main/cpp/jllama.cpp src/main/cpp/server.hpp src/ma
 
 set_target_properties(jllama PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(jllama PRIVATE src/main/cpp ${JNI_INCLUDE_DIRS})
-target_link_libraries(jllama PUBLIC common llama ggml-base nlohmann_json)
+target_link_libraries(jllama PRIVATE common llama nlohmann_json)
 target_compile_features(jllama PRIVATE cxx_std_11)
 
 target_compile_definitions(jllama PRIVATE
@@ -108,12 +108,10 @@ target_compile_definitions(jllama PRIVATE
 )
 
 if(OS_NAME STREQUAL "Windows")
-	set_target_properties(jllama llama ggml PROPERTIES
+	set_target_properties(jllama llama ggml ggml-base ggml-cpu PROPERTIES
 	  RUNTIME_OUTPUT_DIRECTORY_DEBUG ${JLLAMA_DIR}
 	  RUNTIME_OUTPUT_DIRECTORY_RELEASE ${JLLAMA_DIR}
 	)
- 	target_link_libraries(ggml PUBLIC ggml-base ggml-cpu)
-  	target_compile_features(ggml PRIVATE cxx_std_11)
 else()
 	set_target_properties(jllama llama ggml PROPERTIES
 	  LIBRARY_OUTPUT_DIRECTORY ${JLLAMA_DIR}
