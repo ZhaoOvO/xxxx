@@ -951,4 +951,12 @@ public final class ModelParameters extends CliParameters {
         return this;
     }
 
+    /**
+     * Enable jinja for templating
+     */
+    public ModelParameters enableJinja() {
+        parameters.put("--jinja", null);
+        return this;
+    }
+
 }
