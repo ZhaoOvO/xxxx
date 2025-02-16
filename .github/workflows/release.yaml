@@ -18,8 +18,8 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: linux-libraries-cuda
-          path: ${{ github.workspace }}/src/main/resources_linux_cuda/cn/hthcorp/llama/
+          name: ${{ matrix.target.os }}-${{ matrix.target.arch }}-cuda-libraries
+          path: ${{ github.workspace }}/src/main/resources/cn/hthcorp/llama/
 
   build-linux-docker:
     name: Build ${{ matrix.target.os }}-${{ matrix.target.arch }}
@@ -195,7 +195,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          pattern: "*-libraries*"
+          pattern: "*-libraries"
           merge-multiple: true
           path: ${{ github.workspace }}/src/main/resources/cn/hthcorp/llama/
       - name: Upload artifacts
